@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Young Ocha — Minds Eyes Tel-D-Vision | Film Director &amp; Music Producer</title>
+<meta name="description" content="Young Ocha directs film and produces music under Minds Eyes Tel-D-Vision — events coverage, gospel films, music videos and social media content. We see beyond, we tell your vision.">
+<meta name="theme-color" content="#0c0a08">
+<meta property="og:title" content="Young Ocha — Minds Eyes Tel-D-Vision">
+<meta property="og:description" content="Film director &amp; music producer. Events, gospel films, music videos, social media skits.">
+<meta property="og:type" content="website">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Manrope:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"Big Shoulders Display"', 'Impact', '"Arial Narrow Bold"', 'sans-serif'],
+          body: ['Manrope', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif']
+        },
+        colors: {
+          ink: 'var(--bg)',
+          surface: 'var(--surface)',
+          surface2: 'var(--surface-2)',
+          hair: 'var(--hairline)',
+          gold: 'var(--gold)',
+          goldsoft: 'var(--gold-soft)',
+          ember: 'var(--ember)',
+          embersoft: 'var(--ember-soft)',
+          paper: 'var(--paper)',
+          muted: 'var(--muted)'
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --bg:#0c0a08;
+    --surface:#171310;
+    --surface-2:#1f1a15;
+    --hairline:#332b21;
+    --gold:#c89b3c;
+    --gold-soft:#e3c583;
+    --ember:#a83232;
+    --ember-soft:#c65a3f;
+    --paper:#ede6d8;
+    --muted:#9c9484;
+  }
+  /* This is a single, always-dark cinema-house brand — both schemes resolve to the same palette on purpose. */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0c0a08; --surface:#171310; --surface-2:#1f1a15; --hairline:#332b21;
+      --gold:#c89b3c; --gold-soft:#e3c583; --ember:#a83232; --ember-soft:#c65a3f;
+      --paper:#ede6d8; --muted:#9c9484;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0c0a08; --surface:#171310; --surface-2:#1f1a15; --hairline:#332b21;
+    --gold:#c89b3c; --gold-soft:#e3c583; --ember:#a83232; --ember-soft:#c65a3f;
+    --paper:#ede6d8; --muted:#9c9484;
+  }
+
+  body{ background:var(--bg); color:var(--paper); }
+  ::selection{ background:var(--gold); color:var(--bg); }
+
+  .hairline{ border-color:var(--hairline); }
+
+  /* Sprocket rail — a nod to 35mm film stock, used sparingly beside a few key images */
+  .sprocket-rail{
+    width:14px;
+    flex:none;
+    border-radius:3px;
+    background-color:var(--surface-2);
+    background-image: repeating-linear-gradient(180deg, var(--gold) 0 6px, transparent 6px 20px);
+    background-position: center 6px;
+  }
+
+  /* Viewfinder corner brackets */
+  .vf-corner{ position:absolute; width:26px; height:26px; border-color:var(--gold); opacity:.75; }
+  .vf-tl{ top:14px; left:14px; border-top:2px solid; border-left:2px solid; }
+  .vf-tr{ top:14px; right:14px; border-top:2px solid; border-right:2px solid; }
+  .vf-bl{ bottom:14px; left:14px; border-bottom:2px solid; border-left:2px solid; }
+  .vf-br{ bottom:14px; right:14px; border-bottom:2px solid; border-right:2px solid; }
+
+  /* Letterbox curtain reveal */
+  .letterbox{ position:absolute; left:0; right:0; background:var(--bg); z-index:20; transition:height 1.1s cubic-bezier(.65,0,.35,1); }
+  .letterbox-top{ top:0; height:50%; }
+  .letterbox-bottom{ bottom:0; height:50%; }
+  .letterbox.open.letterbox-top{ height:0; }
+  .letterbox.open.letterbox-bottom{ height:0; }
+  @media (prefers-reduced-motion: reduce){
+    .letterbox{ transition:none; }
+  }
+
+  .placeholder-frame{ position:relative; overflow:hidden; background:linear-gradient(155deg, var(--surface-2), var(--bg) 75%); }
+  .placeholder-frame::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at 28% 22%, rgba(200,155,60,.22), transparent 60%);
+  }
+  .placeholder-frame::after{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%);
+  }
+
+  .btn-primary{ background:linear-gradient(100deg, var(--gold), var(--ember-soft)); color:var(--bg); }
+  .btn-primary:hover{ filter:brightness(1.08); }
+
+  textarea, input, select{ background:var(--surface-2); border:1px solid var(--hairline); color:var(--paper); }
+  textarea::placeholder, input::placeholder{ color:var(--muted); }
+  select option{ background:var(--surface-2); color: var(--paper); }
+
+  .modal{ backdrop-filter: blur(6px); }
+
+  a, button{ -webkit-tap-highlight-color: transparent; }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:2px solid var(--gold); outline-offset:2px;
+  }
+
+  .fade-up{ animation: fadeUp .35s ease both; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce){ .fade-up{ animation:none; } }
+</style>
+</head>
+<body class="font-body antialiased">
+
+<!-- ==================== NAV ==================== -->
+<header class="sticky top-0 z-30 bg-ink/85 backdrop-blur-md border-b hairline">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 h-[76px] flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-3 group">
+      <svg width="38" height="38" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="19" stroke="var(--gold)" stroke-width="1.4"/>
+        <path d="M4 20C8 12 14 8 20 8C26 8 32 12 36 20C32 28 26 32 20 32C14 32 8 28 4 20Z" stroke="var(--gold-soft)" stroke-width="1.3"/>
+        <circle cx="20" cy="20" r="6.5" fill="var(--ember)"/>
+        <circle cx="20" cy="20" r="2.6" fill="var(--bg)"/>
+      </svg>
+      <div class="leading-none">
+        <p class="font-display text-xl tracking-wide text-paper">YOUNG OCHA</p>
+        <p class="text-[10px] text-muted mt-0.5">Minds Eyes Tel-D-Vision</p>
+      </div>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8 text-sm text-paper/70">
+      <a href="#work" class="hover:text-paper transition">Work</a>
+      <a href="#services" class="hover:text-paper transition">Services</a>
+      <a href="#about" class="hover:text-paper transition">About</a>
+      <a href="#contact" class="hover:text-paper transition">Contact</a>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href="#" onclick="quickWhatsApp(event)" class="hidden sm:flex items-center gap-2 border hairline hover:border-gold/60 text-paper/80 hover:text-paper px-3.5 py-2 rounded-md text-sm transition">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.57L4 20l1.02-4.5A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.5 10.5c.3 2 2.2 3.9 4.2 4.2" stroke-linecap="round"/></svg>
+        WhatsApp
+      </a>
+      <button onclick="openModal('booking-modal')" class="btn-primary font-semibold text-sm px-4 py-2.5 rounded-md">
+        Book a session
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ==================== HERO ==================== -->
+  <section class="relative overflow-hidden border-b hairline">
+    <div class="relative h-[560px] md:h-[640px]">
+      <!-- decorative aperture graphic -->
+      <div class="absolute inset-0">
+        <div class="absolute inset-0" style="background:radial-gradient(ellipse at 78% 45%, rgba(200,155,60,.10), transparent 55%), radial-gradient(ellipse at 15% 80%, rgba(168,50,50,.12), transparent 55%);"></div>
+        <svg class="absolute -right-24 top-1/2 -translate-y-1/2 opacity-[.16]" width="620" height="620" viewBox="0 0 620 620" fill="none">
+          <circle cx="310" cy="310" r="300" stroke="var(--gold)" stroke-width="1"/>
+          <circle cx="310" cy="310" r="230" stroke="var(--gold)" stroke-width="1"/>
+          <circle cx="310" cy="310" r="160" stroke="var(--ember-soft)" stroke-width="1"/>
+          <g stroke="var(--gold-soft)" stroke-width="1">
+            <line x1="310" y1="10" x2="310" y2="90"/><line x1="310" y1="530" x2="310" y2="610"/>
+            <line x1="10" y1="310" x2="90" y2="310"/><line x1="530" y1="310" x2="610" y2="310"/>
+            <line x1="90" y1="90" x2="145" y2="145"/><line x1="475" y1="475" x2="530" y2="530"/>
+            <line x1="530" y1="90" x2="475" y2="145"/><line x1="145" y1="475" x2="90" y2="530"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="vf-corner vf-tl"></div>
+      <div class="vf-corner vf-tr"></div>
+      <div class="vf-corner vf-bl"></div>
+      <div class="vf-corner vf-br"></div>
+
+      <div class="relative z-10 max-w-6xl mx-auto px-5 md:px-8 h-full flex items-center">
+        <div class="max-w-2xl">
+          <p class="font-body italic text-goldsoft text-base md:text-lg mb-4">"We see beyond, we tell your vision."</p>
+          <h1 class="font-display text-[15vw] leading-[0.85] md:text-[6.2rem] md:leading-[0.85] text-paper">
+            YOUNG<br>OCHA
+          </h1>
+          <p class="text-paper/70 text-base md:text-lg mt-6 max-w-lg">
+            Cinematographer, director and music producer running Minds Eyes Tel-D-Vision — events, gospel films, music videos and social media content, shot and cut by one crew with one point of view.
+          </p>
+          <div class="flex flex-wrap gap-3 mt-8">
+            <button onclick="openModal('reel-modal')" class="border border-gold/50 hover:bg-gold/10 text-paper font-semibold text-sm px-5 py-3 rounded-md transition">
+              Watch the reel
+            </button>
+            <button onclick="openModal('booking-modal')" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md">
+              Book a session
+            </button>
+          </div>
+          <p class="text-xs text-muted mt-8">Cinematography — Del York Creative Academy</p>
+        </div>
+      </div>
+
+      <div class="letterbox letterbox-top" id="lb-top"></div>
+      <div class="letterbox letterbox-bottom" id="lb-bottom"></div>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT ==================== -->
+  <section id="about" class="max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-24">
+    <div class="grid md:grid-cols-[220px_1fr] gap-10 items-start">
+      <div class="flex gap-3">
+        <div class="sprocket-rail h-[280px]"></div>
+        <div class="placeholder-frame w-full h-[280px] flex items-center justify-center border hairline rounded-sm">
+          <span class="relative z-10 font-display text-6xl text-goldsoft">YO</span>
+          <span class="absolute bottom-3 left-3 z-10 text-[10px] text-muted">Photo placeholder</span>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="font-display text-4xl md:text-5xl text-paper mb-5">About the director</h2>
+        <p class="text-paper/75 leading-relaxed max-w-xl mb-4">
+          Ben-David O. Otitoola — known across the industry as Young Ocha — trained as a cinematographer at Del York Creative Academy, one of Nigeria's film schools built specifically for working on real sets, not just theory. Under his own company, Minds Eyes Tel-D-Vision, he directs and shoots for clients who want their story handled with the same care a feature film gets: deliberate light, considered movement, sound that matters as much as picture.
+        </p>
+        <p class="text-paper/75 leading-relaxed max-w-xl mb-8">
+          Off set, Young Ocha produces music — writing hooks, arranging beats and mixing tracks for many of the same artists he shoots videos for. One person carrying both the sound and the picture means the video is built around what the record actually says, instead of a look applied after the fact by someone who never heard the song.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <span class="text-xs border hairline rounded-full px-4 py-2 text-paper/70">Del York Creative Academy — Cinematography</span>
+          <span class="text-xs border hairline rounded-full px-4 py-2 text-paper/70">Founder, Minds Eyes Tel-D-Vision</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SERVICES ==================== -->
+  <section id="services" class="border-y hairline bg-surface/40">
+    <div class="max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <h2 class="font-display text-4xl md:text-5xl text-paper mb-3">What we shoot</h2>
+      <p class="text-paper/60 max-w-lg mb-12">Four disciplines, run out of one studio, so your visuals and your sound never feel like they came from two different places.</p>
+
+      <div id="services-grid" class="grid sm:grid-cols-2 gap-4"></div>
+    </div>
+  </section>
+
+  <!-- ==================== WORK ==================== -->
+  <section id="work" class="max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-24">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div>
+        <h2 class="font-display text-4xl md:text-5xl text-paper mb-3">The work</h2>
+        <p class="text-paper/60 max-w-md">A contact sheet of the kind of projects Minds Eyes takes on. Titles in brackets are sample slots — swap in real client and project names.</p>
+      </div>
+    </div>
+
+    <div id="filter-pills" class="flex gap-2 overflow-x-auto pb-2 mb-8"></div>
+    <div id="work-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+  </section>
+
+  <!-- ==================== PROCESS ==================== -->
+  <section class="border-y hairline bg-surface/40">
+    <div class="max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-24">
+      <h2 class="font-display text-4xl md:text-5xl text-paper mb-12">How a project comes together</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="border-l-2 border-gold pl-4">
+          <p class="font-display text-3xl text-goldsoft mb-2">01</p>
+          <h3 class="font-semibold text-paper mb-1">Discovery call</h3>
+          <p class="text-sm text-paper/60">A short WhatsApp or phone chat to hear what you need and whether it fits events, gospel film, music video, or content.</p>
+        </div>
+        <div class="border-l-2 border-gold pl-4">
+          <p class="font-display text-3xl text-goldsoft mb-2">02</p>
+          <h3 class="font-semibold text-paper mb-1">Concept &amp; pre-production</h3>
+          <p class="text-sm text-paper/60">Treatment, shot list, location and schedule agreed before anyone touches a camera.</p>
+        </div>
+        <div class="border-l-2 border-gold pl-4">
+          <p class="font-display text-3xl text-goldsoft mb-2">03</p>
+          <h3 class="font-semibold text-paper mb-1">Production day</h3>
+          <p class="text-sm text-paper/60">Shoot day (or days) run to the plan, with room to adjust when the moment calls for it.</p>
+        </div>
+        <div class="border-l-2 border-gold pl-4">
+          <p class="font-display text-3xl text-goldsoft mb-2">04</p>
+          <h3 class="font-semibold text-paper mb-1">Edit &amp; delivery</h3>
+          <p class="text-sm text-paper/60">Colour, sound and cut finished, delivered in the formats you'll actually use — screen, stream, or scroll.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT ==================== -->
+  <section id="contact" class="max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-24">
+    <div class="grid lg:grid-cols-[1fr_1.2fr] gap-10">
+      <div>
+        <h2 class="font-display text-4xl md:text-5xl text-paper mb-3">Get in touch</h2>
+        <p class="text-paper/60 mb-8 max-w-sm">Fastest way in is WhatsApp. For a fuller brief, use the form.</p>
+
+        <div class="space-y-3">
+          <a href="#" onclick="quickWhatsApp(event)" class="flex items-center justify-between border hairline hover:border-[#25D366]/60 rounded-md px-5 py-4 transition group">
+            <div class="flex items-center gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.57L4 20l1.02-4.5A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+              <div>
+                <p class="text-sm font-semibold text-paper">WhatsApp</p>
+                <p class="text-xs text-muted">+234 913 677 1613</p>
+              </div>
+            </div>
+            <span class="text-xs text-paper/40 group-hover:text-paper/70">Chat now</span>
+          </a>
+
+          <a href="https://instagram.com/itsyoungocha" target="_blank" rel="noopener" class="flex items-center justify-between border hairline hover:border-gold/60 rounded-md px-5 py-4 transition group">
+            <div class="flex items-center gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold-soft)" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="0.8" fill="var(--gold-soft)" stroke="none"/></svg>
+              <div>
+                <p class="text-sm font-semibold text-paper">Instagram</p>
+                <p class="text-xs text-muted">@itsyoungocha</p>
+              </div>
+            </div>
+            <span class="text-xs text-paper/40 group-hover:text-paper/70">Follow</span>
+          </a>
+
+          <a href="https://facebook.com/BenDavidOOtitoola" target="_blank" rel="noopener" class="flex items-center justify-between border hairline hover:border-gold/60 rounded-md px-5 py-4 transition group">
+            <div class="flex items-center gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold-soft)" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M14 8.5h-1.6c-.8 0-1.4.6-1.4 1.4V11h3l-.4 2.4h-2.6V19" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div>
+                <p class="text-sm font-semibold text-paper">Facebook</p>
+                <p class="text-xs text-muted">Ben-David O. Otitoola</p>
+              </div>
+            </div>
+            <span class="text-xs text-paper/40 group-hover:text-paper/70">Add friend</span>
+          </a>
+        </div>
+        <p class="text-[11px] text-muted mt-4">Facebook link is a placeholder built from the name given — confirm the real profile URL before publishing.</p>
+      </div>
+
+      <div class="bg-surface border hairline rounded-md p-6 md:p-8">
+        <p class="text-xs text-muted mb-1">Project brief</p>
+        <h3 class="font-display text-2xl text-paper mb-5">Tell us what you're planning</h3>
+        <form class="space-y-3" onsubmit="submitBooking(event)">
+          <div class="grid sm:grid-cols-2 gap-3">
+            <input required name="name" placeholder="Your name" class="rounded-md px-4 py-3 text-sm w-full">
+            <input required name="phone" placeholder="Phone number" class="rounded-md px-4 py-3 text-sm w-full">
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <select required name="projectType" class="rounded-md px-4 py-3 text-sm w-full">
+              <option value="" disabled selected>Project type</option>
+              <option>Events photography/videography</option>
+              <option>Gospel film</option>
+              <option>Music video</option>
+              <option>Audio production</option>
+              <option>Social media skit/content</option>
+              <option>Other</option>
+            </select>
+            <input name="date" type="date" class="rounded-md px-4 py-3 text-sm w-full">
+          </div>
+          <input name="location" placeholder="Location / city" class="rounded-md px-4 py-3 text-sm w-full">
+          <textarea name="details" rows="3" placeholder="Tell us a bit more about the project..." class="rounded-md px-4 py-3 text-sm w-full"></textarea>
+          <button type="submit" class="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:brightness-95 text-white font-semibold py-3.5 rounded-md transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.57L4 20l1.02-4.5A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+            Send via WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="border-t hairline">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 py-10 flex flex-col md:flex-row justify-between gap-6">
+    <div>
+      <p class="font-display text-lg text-paper">MINDS EYES TEL-D-VISION</p>
+      <p class="text-sm text-goldsoft italic mt-1">We see beyond, we tell your vision.</p>
+    </div>
+    <div class="text-sm text-paper/50 space-y-1 md:text-right">
+      <p>WhatsApp: +234 913 677 1613</p>
+      <p>Instagram: @itsyoungocha</p>
+      <p class="text-muted" id="footer-year"></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== FLOATING WHATSAPP ==================== -->
+<a href="#" onclick="quickWhatsApp(event)" aria-label="Chat on WhatsApp" class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-[#25D366] shadow-lg shadow-black/40 flex items-center justify-center hover:brightness-95 transition">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.57L4 20l1.02-4.5A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+</a>
+
+<!-- ==================== SERVICE MODAL ==================== -->
+<div id="service-modal" class="modal fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/75" onclick="closeModal('service-modal')"></div>
+  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
+    <div class="bg-surface border hairline w-full max-w-lg rounded-md p-6 md:p-7 relative my-8 fade-up">
+      <button onclick="closeModal('service-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div id="service-modal-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== WORK MODAL ==================== -->
+<div id="work-modal" class="modal fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/75" onclick="closeModal('work-modal')"></div>
+  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
+    <div class="bg-surface border hairline w-full max-w-lg rounded-md p-6 md:p-7 relative my-8 fade-up">
+      <button onclick="closeModal('work-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div id="work-modal-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== REEL MODAL ==================== -->
+<div id="reel-modal" class="modal fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/75" onclick="closeModal('reel-modal')"></div>
+  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
+    <div class="bg-surface border hairline w-full max-w-2xl rounded-md p-6 md:p-7 relative my-8 fade-up">
+      <button onclick="closeModal('reel-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <h3 class="font-display text-2xl text-paper mb-4">Showreel</h3>
+      <div class="placeholder-frame aspect-video rounded-sm border hairline flex items-center justify-center mb-4">
+        <div class="relative z-10 w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--gold-soft)"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <span class="absolute bottom-3 left-3 z-10 text-[10px] text-muted">Video placeholder — embed your YouTube/Vimeo reel here</span>
+      </div>
+      <p class="text-sm text-paper/60 mb-5">Swap this panel for an embedded showreel — recent event highlights, a gospel film scene, a music video cut and a skit, back to back.</p>
+      <button onclick="serviceWhatsApp('the showreel')" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md">Ask about a project like this</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BOOKING MODAL ==================== -->
+<div id="booking-modal" class="modal fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/75" onclick="closeModal('booking-modal')"></div>
+  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
+    <div class="bg-surface border hairline w-full max-w-lg rounded-md p-6 md:p-7 relative my-8 fade-up">
+      <button onclick="closeModal('booking-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <p class="text-xs text-muted mb-1">Project brief</p>
+      <h3 class="font-display text-2xl text-paper mb-5">Book a session</h3>
+      <form class="space-y-3" onsubmit="submitBooking(event); closeModal('booking-modal');">
+        <div class="grid sm:grid-cols-2 gap-3">
+          <input required name="name" placeholder="Your name" class="rounded-md px-4 py-3 text-sm w-full">
+          <input required name="phone" placeholder="Phone number" class="rounded-md px-4 py-3 text-sm w-full">
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <select required name="projectType" class="rounded-md px-4 py-3 text-sm w-full">
+            <option value="" disabled selected>Project type</option>
+            <option>Events photography/videography</option>
+            <option>Gospel film</option>
+            <option>Music video</option>
+            <option>Audio production</option>
+            <option>Social media skit/content</option>
+            <option>Other</option>
+          </select>
+          <input name="date" type="date" class="rounded-md px-4 py-3 text-sm w-full">
+        </div>
+        <input name="location" placeholder="Location / city" class="rounded-md px-4 py-3 text-sm w-full">
+        <textarea name="details" rows="3" placeholder="Tell us a bit more about the project..." class="rounded-md px-4 py-3 text-sm w-full"></textarea>
+        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:brightness-95 text-white font-semibold py-3.5 rounded-md transition">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.57L4 20l1.02-4.5A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+          Send via WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==================== CONFIG ====================
+  const WHATSAPP_NUMBER = "2349136771613";
+  function waLink(message){ return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message); }
+  function openWhatsApp(message){ window.open(waLink(message), "_blank"); }
+  function quickWhatsApp(e){ e.preventDefault(); openWhatsApp("Hi Young Ocha! I'd like to book a session with Minds Eyes Tel-D-Vision."); }
+  function serviceWhatsApp(label){ openWhatsApp("Hi Young Ocha! I saw \"" + label + "\" on your website and I'd like to know more."); closeModal('service-modal'); closeModal('work-modal'); }
+
+  // ==================== ICONS ====================
+  const icons = {
+    camera: '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--gold-soft)" stroke-width="1.4"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.4"/></svg>',
+    cross: '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--gold-soft)" stroke-width="1.4"><path d="M12 3v18M6 8h12" stroke-linecap="round"/></svg>',
+    mic: '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--gold-soft)" stroke-width="1.4"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" stroke-linecap="round"/></svg>',
+    phone: '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--gold-soft)" stroke-width="1.4"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18h2" stroke-linecap="round"/></svg>'
+  };
+
+  // ==================== DATA ====================
+  const services = [
+    { id:1, key:'events', icon:'camera', title:'Events Photography & Videography',
+      teaser:'Weddings, owambe, corporate launches — covered on multiple cameras so no moment slips past you.',
+      lead:'Every event runs once. We treat it that way.',
+      body:'Multi-camera coverage means the vows, the surprise entrance and the dance floor all get caught at the same time, not one after another. You get a same-week highlight reel for sharing right away, followed by the full edited film and every usable clip from the day.',
+      included:['Multi-camera photo & video coverage','Same-week highlight reel (2–4 min)','Full edited event film','All raw, sorted footage handed over','Drone coverage available on request'] },
+    { id:2, key:'gospel', icon:'cross', title:'Gospel Films',
+      teaser:'Short films, testimonies and ministry documentaries shot with the patience a message like that deserves.',
+      lead:'A testimony loses nothing when it is filmed well.',
+      body:'From scripted short films to a member telling their own testimony in their own words, the approach stays the same: steady pacing, clean sound and lighting that lets people watch without distraction. We work with your ministry team on the message first, then build the shoot around it.',
+      included:['Story/testimony development with your team','Scripted shorts or documentary-style testimonies','On-location or studio filming','Sound design and caption-ready subtitles','Cuts sized for church screens and social media'] },
+    { id:3, key:'music', icon:'mic', title:'Music Videos & Audio Production',
+      teaser:'Direction, shooting and edit on the video side; writing, arrangement and mixing on the audio side.',
+      lead:'One person shaping the sound and the picture, not two vendors guessing at each other.',
+      body:'On the audio side: beat production, vocal recording, arrangement and mixing. On the video side: treatment, locations, shoot day and edit. Because both sides come from Minds Eyes, the video is built around what the record is actually saying.',
+      included:['Beat production, arrangement & mixing','Vocal recording sessions','Video treatment & concept development','Location scouting & shoot-day direction','Colour-graded final edit for streaming platforms'] },
+    { id:4, key:'skits', icon:'phone', title:'Social Media Skits & Content',
+      teaser:'Comedy skits, brand content and reels built for the scroll, from concept to caption.',
+      lead:'Made to be watched in the first three seconds.',
+      body:'Skit writing, casting, same-day shooting and a fast edit — built for Instagram, TikTok and WhatsApp Status, not repurposed from something longer. Brands get the same treatment: a script that sounds like a person, not an advert.',
+      included:['Skit scripting & concept development','Same-day or next-day shoot turnaround','Edited for vertical, sound-off-friendly viewing','Batch content days available','Caption & posting-time suggestions included'] }
+  ];
+
+  const works = [
+    { id:1, category:'events', frame:'01', title:'[Client Name] — Traditional Wedding Coverage', desc:'Full-day owambe coverage across two locations, cut into a same-week highlight reel and a longer keepsake film.' },
+    { id:2, category:'events', frame:'02', title:'[Brand Name] — Product Launch Highlights', desc:'Multi-camera coverage of a product launch, delivered as a recap video and standalone clips for social pages.' },
+    { id:3, category:'gospel', frame:'03', title:'Beyond the Valley — Short Film', desc:'A scripted short film built around a testimony, shot on location over two days with a small cast and crew.' },
+    { id:4, category:'gospel', frame:'04', title:'[Ministry Name] — Testimony Series', desc:'A five-part testimony series filmed for Sunday screenings and shared clip by clip through the week.' },
+    { id:5, category:'music', frame:'05', title:'[Artist Name] — "[Track Title]" Official Video', desc:'Treatment, location shoot and full edit for a single release, plus the mix that shipped with it.' },
+    { id:6, category:'music', frame:'06', title:'[Artist Name] — Studio Session', desc:'Vocal recording and mix for an EP, tracked and produced start to finish at Minds Eyes.' },
+    { id:7, category:'skits', frame:'07', title:'Skit: "[Skit Title]"', desc:'A three-minute comedy skit written, shot and edited in a single day for Instagram and TikTok.' },
+    { id:8, category:'skits', frame:'08', title:'[Brand Name] — Reels Campaign', desc:'A six-reel content batch for a small business, shot in one afternoon and delivered across two weeks.' }
+  ];
+
+  const filters = [
+    { key:'all', label:'All work' },
+    { key:'events', label:'Events' },
+    { key:'gospel', label:'Gospel films' },
+    { key:'music', label:'Music videos' },
+    { key:'skits', label:'Skits' }
+  ];
+  let activeFilter = 'all';
+
+  // ==================== RENDER: SERVICES ====================
+  function renderServices(){
+    document.getElementById('services-grid').innerHTML = services.map(s => `
+      <button onclick="openServiceModal(${s.id})" class="text-left bg-surface border hairline hover:border-gold/50 rounded-md p-6 transition flex flex-col justify-between h-full">
+        <div>
+          <div class="mb-4">${icons[s.icon]}</div>
+          <h3 class="font-display text-xl text-paper mb-2">${s.title}</h3>
+          <p class="text-sm text-paper/60 mb-5">${s.teaser}</p>
+        </div>
+        <span class="text-sm text-goldsoft font-semibold">See details</span>
+      </button>
+    `).join('');
+  }
+
+  function openServiceModal(id){
+    const s = services.find(x => x.id === id);
+    document.getElementById('service-modal-body').innerHTML = `
+      <div class="mb-4">${icons[s.icon]}</div>
+      <h3 class="font-display text-2xl text-paper mb-1">${s.title}</h3>
+      <p class="text-goldsoft text-sm italic mb-4">${s.lead}</p>
+      <p class="text-paper/70 text-sm leading-relaxed mb-5">${s.body}</p>
+      <p class="text-xs uppercase tracking-wide text-muted mb-2">What's included</p>
+      <ul class="space-y-1.5 mb-6">
+        ${s.included.map(i => `<li class="text-sm text-paper/70 flex gap-2"><span class="text-gold">—</span>${i}</li>`).join('')}
+      </ul>
+      <button onclick="serviceWhatsApp('${s.title.replace(/'/g,"\\'")}')" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md w-full sm:w-auto">Ask about this</button>
+    `;
+    openModal('service-modal');
+  }
+
+  // ==================== RENDER: WORK ====================
+  function renderFilters(){
+    document.getElementById('filter-pills').innerHTML = filters.map(f => `
+      <button onclick="setFilter('${f.key}')" class="whitespace-nowrap px-4 py-2 rounded-full text-sm border transition ${activeFilter===f.key ? 'bg-gold text-ink border-gold font-semibold' : 'border-hair text-paper/60 hover:text-paper hover:border-gold/40'}">${f.label}</button>
+    `).join('');
+  }
+  function setFilter(key){ activeFilter = key; renderFilters(); renderWork(); }
+
+  function renderWork(){
+    const list = works.filter(w => activeFilter === 'all' || w.category === activeFilter);
+    document.getElementById('work-grid').innerHTML = list.map(w => `
+      <button onclick="openWorkModal(${w.id})" class="text-left group">
+        <div class="placeholder-frame aspect-[4/3] rounded-sm border hairline group-hover:border-gold/50 transition flex items-center justify-center mb-3">
+          <div class="relative z-10">${icons[categoryIcon(w.category)]}</div>
+          <span class="absolute top-2.5 left-2.5 z-10 text-[10px] text-muted">No. ${w.frame}</span>
+          <span class="absolute top-2.5 right-2.5 z-10 text-[10px] uppercase tracking-wide text-goldsoft">${categoryLabel(w.category)}</span>
+        </div>
+        <p class="text-sm font-semibold text-paper leading-snug">${w.title}</p>
+      </button>
+    `).join('');
+  }
+
+  function categoryIcon(cat){ return { events:'camera', gospel:'cross', music:'mic', skits:'phone' }[cat]; }
+  function categoryLabel(cat){ return { events:'Events', gospel:'Gospel', music:'Music', skits:'Skits' }[cat]; }
+
+  function openWorkModal(id){
+    const w = works.find(x => x.id === id);
+    document.getElementById('work-modal-body').innerHTML = `
+      <div class="placeholder-frame aspect-video rounded-sm border hairline flex items-center justify-center mb-5">
+        <div class="relative z-10">${icons[categoryIcon(w.category)]}</div>
+        <span class="absolute top-3 left-3 z-10 text-[10px] text-muted">No. ${w.frame}</span>
+        <span class="absolute top-3 right-3 z-10 text-[10px] uppercase tracking-wide text-goldsoft">${categoryLabel(w.category)}</span>
+      </div>
+      <h3 class="font-display text-2xl text-paper mb-3">${w.title}</h3>
+      <p class="text-paper/70 text-sm leading-relaxed mb-6">${w.desc}</p>
+      <button onclick="serviceWhatsApp('${w.title.replace(/'/g,"\\'")}')" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md w-full sm:w-auto">Discuss a project like this</button>
+    `;
+    openModal('work-modal');
+  }
+
+  // ==================== MODAL HELPERS ====================
+  function openModal(id){
+    document.getElementById(id).classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id){
+    document.getElementById(id).classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  // ==================== BOOKING FORM ====================
+  function submitBooking(e){
+    e.preventDefault();
+    const d = new FormData(e.target);
+    const msg = "Hi Young Ocha! I'd like to book a session with Minds Eyes Tel-D-Vision.\n\n" +
+      "*PROJECT BRIEF*\n" +
+      "Name: " + d.get('name') + "\n" +
+      "Phone: " + d.get('phone') + "\n" +
+      "Project type: " + d.get('projectType') + "\n" +
+      "Preferred date: " + (d.get('date') || 'Flexible') + "\n" +
+      "Location: " + (d.get('location') || 'Not specified') + "\n\n" +
+      "Details:\n" + (d.get('details') || 'None given') + "\n\n" +
+      "Please let me know availability and pricing.";
+    openWhatsApp(msg);
+  }
+
+  // ==================== INIT ====================
+  document.addEventListener('DOMContentLoaded', () => {
+    renderServices();
+    renderFilters();
+    renderWork();
+    document.getElementById('footer-year').textContent = '© ' + new Date().getFullYear() + ' Minds Eyes Tel-D-Vision. All rights reserved.';
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        document.getElementById('lb-top').classList.add('open');
+        document.getElementById('lb-bottom').classList.add('open');
+      }, 150);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
+        document.body.style.overflow = '';
+      }
+    });
+  });
+</script>
+</body>
+</html>
