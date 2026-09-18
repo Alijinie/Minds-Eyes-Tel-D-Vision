@@ -129,6 +129,39 @@
   select option{ background:var(--surface-2); color: var(--paper); }
 
   .modal{ backdrop-filter: blur(6px); }
+  .modal[aria-hidden="true"]{ display:none; }
+  .modal-panel{ animation: modalIn .32s cubic-bezier(.2,.9,.3,1.2) both; transform-origin:center; max-height: calc(100vh - 3rem); display:flex; flex-direction:column; overflow:hidden; }
+  @keyframes modalIn{ from{ opacity:0; transform:translateY(14px) scale(.98);} to{ opacity:1; transform:none;} }
+  .modal.closing .modal-panel{ animation: modalOut .18s ease both; }
+  @keyframes modalOut{ to{ opacity:0; transform:translateY(8px) scale(.98);} }
+
+  .modal-exit-btn{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--hairline); background:rgba(255,255,255,.06); color:var(--paper); font-size:.8rem; font-weight:700; padding:.5rem .85rem; border-radius:999px; transition:.2s; white-space:nowrap; }
+  .modal-exit-btn:hover{ background:var(--ember); border-color:var(--ember); color:#fff; }
+  .modal-exit-btn kbd{ font-size:10px; opacity:.6; border:1px solid currentColor; border-radius:4px; padding:0 4px; line-height:1.4; }
+  .modal-scroll{ overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--hairline) transparent; }
+  .modal-scroll::-webkit-scrollbar{ width:8px; } .modal-scroll::-webkit-scrollbar-thumb{ background:var(--hairline); border-radius:8px; }
+
+  .tab-btn{ white-space:nowrap; font-size:.8rem; font-weight:700; padding:.55rem .9rem; border-radius:999px; border:1px solid var(--hairline); color:var(--muted); transition:.2s; }
+  .tab-btn:hover{ color:var(--paper); border-color:var(--gold); }
+  .tab-btn.active{ background:var(--gold); border-color:var(--gold); color:#0c0a08; }
+  .accordion-item{ border:1px solid var(--hairline); border-radius:.5rem; overflow:hidden; background:var(--surface-2); }
+  .accordion-q{ width:100%; text-align:left; padding:.8rem 1rem; font-size:.85rem; font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+  .accordion-a{ max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .accordion-item.open .accordion-a{ max-height:300px; }
+  .accordion-item.open .acc-icon{ transform:rotate(45deg); }
+  .acc-icon{ transition:.25s; color:var(--gold); font-size:1.1rem; line-height:1; flex:none; }
+  .check-row{ display:flex; gap:.6rem; align-items:flex-start; font-size:.85rem; padding:.55rem .7rem; border:1px solid var(--hairline); border-radius:.5rem; cursor:pointer; transition:.2s; background:rgba(255,255,255,.02); }
+  .check-row:hover{ border-color:var(--gold); }
+  .check-row.done{ opacity:.75; border-color:var(--gold); background:rgba(200,155,60,.08); }
+  .check-row.done .check-label{ text-decoration:line-through; }
+  .check-box{ width:18px; height:18px; border-radius:5px; border:1.5px solid var(--gold); display:flex; align-items:center; justify-content:center; flex:none; margin-top:1px; font-size:12px; }
+  .check-row.done .check-box{ background:var(--gold); color:#0c0a08; }
+  .gallery-dot{ width:8px; height:8px; border-radius:99px; background:var(--hairline); transition:.25s; cursor:pointer; border:none; padding:0; }
+  .gallery-dot.active{ width:26px; background:var(--gold); }
+  .step-dot{ height:6px; flex:1; border-radius:99px; background:var(--hairline); overflow:hidden; position:relative; }
+  .step-dot.fill::after{ content:""; position:absolute; inset:0; background:linear-gradient(90deg,var(--gold),var(--ember-soft)); }
+  .resource-link{ display:flex; align-items:center; justify-content:space-between; gap:1rem; border:1px solid var(--hairline); border-radius:.5rem; padding:.7rem .9rem; font-size:.83rem; transition:.2s; width:100%; text-align:left; }
+  .resource-link:hover{ border-color:var(--gold); background:rgba(200,155,60,.07); }
 
   a, button{ -webkit-tap-highlight-color: transparent; }
   a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
@@ -405,86 +438,180 @@
 </a>
 
 <!-- ==================== SERVICE MODAL ==================== -->
-<div id="service-modal" class="modal fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/75" onclick="closeModal('service-modal')"></div>
-  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
-    <div class="bg-surface border hairline w-full max-w-lg rounded-md p-6 md:p-7 relative my-8 fade-up">
-      <button onclick="closeModal('service-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <div id="service-modal-body"></div>
+<div id="service-modal" class="modal fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="service-modal-title" aria-hidden="true">
+  <div class="absolute inset-0 bg-black/80" onclick="closeModal('service-modal')" aria-hidden="true"></div>
+  <div class="absolute inset-0 overflow-y-auto p-3 md:p-6 flex items-start md:items-center justify-center" onclick="if(event.target===this)closeModal('service-modal')">
+    <div class="modal-panel bg-surface border hairline w-full max-w-2xl rounded-lg relative my-4 md:my-8 shadow-2xl shadow-black/60">
+      <div class="flex items-center justify-between gap-3 px-5 md:px-7 py-4 border-b hairline bg-surface-2/60 sticky top-0 z-10 rounded-t-lg">
+        <div class="min-w-0">
+          <p class="text-[11px] uppercase tracking-[.18em] text-goldsoft font-bold">Service details</p>
+          <h3 id="service-modal-title" class="font-display text-lg text-paper leading-tight truncate">Service</h3>
+        </div>
+        <button onclick="closeModal('service-modal')" aria-label="Close dialog (Escape)" class="modal-exit-btn flex-none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+          Close <kbd class="hidden sm:inline">ESC</kbd>
+        </button>
+      </div>
+      <div class="modal-scroll px-5 md:px-7 py-5 md:py-6"><div id="service-modal-body"></div></div>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-5 md:px-7 py-4 border-t hairline bg-black/20 rounded-b-lg">
+        <p class="text-[11px] text-muted">Click outside, or press ESC to exit at any time.</p>
+        <div class="flex gap-2">
+          <button onclick="closeModal('service-modal')" class="flex-1 sm:flex-none text-sm font-semibold px-5 py-2.5 rounded-md border hairline hover:border-gold text-paper/80 hover:text-paper transition">← Back to site</button>
+          <button onclick="closeModal('service-modal');openModal('booking-modal')" class="flex-1 sm:flex-none btn-primary text-sm font-bold px-5 py-2.5 rounded-md">Book this service</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ==================== WORK MODAL ==================== -->
-<div id="work-modal" class="modal fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/75" onclick="closeModal('work-modal')"></div>
-  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
-    <div class="bg-surface border hairline w-full max-w-lg rounded-md p-6 md:p-7 relative my-8 fade-up">
-      <button onclick="closeModal('work-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <div id="work-modal-body"></div>
+<div id="work-modal" class="modal fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="work-modal-title" aria-hidden="true">
+  <div class="absolute inset-0 bg-black/80" onclick="closeModal('work-modal')" aria-hidden="true"></div>
+  <div class="absolute inset-0 overflow-y-auto p-3 md:p-6 flex items-start md:items-center justify-center" onclick="if(event.target===this)closeModal('work-modal')">
+    <div class="modal-panel bg-surface border hairline w-full max-w-2xl rounded-lg relative my-4 md:my-8 shadow-2xl shadow-black/60">
+      <div class="flex items-center justify-between gap-3 px-5 md:px-7 py-4 border-b hairline bg-surface-2/60 sticky top-0 z-10 rounded-t-lg">
+        <div class="min-w-0">
+          <p class="text-[11px] uppercase tracking-[.18em] text-goldsoft font-bold">Case study <span id="work-modal-count" class="text-muted"></span></p>
+          <h3 id="work-modal-title" class="font-display text-lg text-paper leading-tight truncate">Project</h3>
+        </div>
+        <button onclick="closeModal('work-modal')" aria-label="Close dialog (Escape)" class="modal-exit-btn flex-none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+          Close <kbd class="hidden sm:inline">ESC</kbd>
+        </button>
+      </div>
+      <div class="modal-scroll px-5 md:px-7 py-5 md:py-6"><div id="work-modal-body"></div></div>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-5 md:px-7 py-4 border-t hairline bg-black/20 rounded-b-lg">
+        <div class="flex gap-2">
+          <button id="work-prev-btn" onclick="stepWork(-1)" class="text-sm font-semibold px-4 py-2.5 rounded-md border hairline hover:border-gold transition">← Prev</button>
+          <button id="work-next-btn" onclick="stepWork(1)" class="text-sm font-semibold px-4 py-2.5 rounded-md border hairline hover:border-gold transition">Next →</button>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="closeModal('work-modal')" class="flex-1 sm:flex-none text-sm font-semibold px-5 py-2.5 rounded-md border hairline hover:border-ember hover:text-white transition">✕ Close</button>
+          <button onclick="openModal('booking-modal')" class="flex-1 sm:flex-none btn-primary text-sm font-bold px-5 py-2.5 rounded-md">Start similar project</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ==================== REEL MODAL ==================== -->
-<div id="reel-modal" class="modal fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/75" onclick="closeModal('reel-modal')"></div>
-  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
-    <div class="bg-surface border hairline w-full max-w-2xl rounded-md p-6 md:p-7 relative my-8 fade-up">
-      <button onclick="closeModal('reel-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <h3 class="font-display text-2xl text-paper mb-4">Showreel</h3>
-      <div class="placeholder-frame aspect-video rounded-sm border hairline flex items-center justify-center mb-4">
-        <div class="relative z-10 w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--gold-soft)"><path d="M8 5v14l11-7z"/></svg>
+<div id="reel-modal" class="modal fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="reel-modal-title" aria-hidden="true">
+  <div class="absolute inset-0 bg-black/85" onclick="closeModal('reel-modal')" aria-hidden="true"></div>
+  <div class="absolute inset-0 overflow-y-auto p-3 md:p-6 flex items-start md:items-center justify-center" onclick="if(event.target===this)closeModal('reel-modal')">
+    <div class="modal-panel bg-surface border hairline w-full max-w-3xl rounded-lg relative my-4 md:my-8 shadow-2xl shadow-black/60">
+      <div class="flex items-center justify-between gap-3 px-5 md:px-7 py-4 border-b hairline bg-surface-2/60 sticky top-0 z-10 rounded-t-lg">
+        <div>
+          <p class="text-[11px] uppercase tracking-[.18em] text-goldsoft font-bold">Showreel • 4 chapters</p>
+          <h3 id="reel-modal-title" class="font-display text-lg text-paper leading-tight">Showreel</h3>
         </div>
-        <span class="absolute bottom-3 left-3 z-10 text-[10px] text-muted">Video placeholder — embed your YouTube/Vimeo reel here</span>
+        <button onclick="closeModal('reel-modal')" aria-label="Close dialog (Escape)" class="modal-exit-btn flex-none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+          Close <kbd class="hidden sm:inline">ESC</kbd>
+        </button>
       </div>
-      <p class="text-sm text-paper/60 mb-5">Swap this panel for an embedded showreel — recent event highlights, a gospel film scene, a music video cut and a skit, back to back.</p>
-      <button onclick="serviceWhatsApp('the showreel')" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md">Ask about a project like this</button>
+      <div class="modal-scroll px-5 md:px-7 py-5 md:py-6">
+        <div id="reel-stage" class="placeholder-frame aspect-video rounded-md border hairline flex items-center justify-center mb-4 relative overflow-hidden">
+          <div class="relative z-10 w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center bg-black/40 cursor-pointer hover:scale-105 transition" onclick="playReelChapter(currentReel)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--gold-soft)"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <span id="reel-timecode" class="absolute top-3 left-3 z-10 text-[10px] font-mono bg-black/60 px-2 py-1 rounded text-goldsoft">00:00 / 02:40</span>
+          <span id="reel-chapter-tag" class="absolute top-3 right-3 z-10 text-[10px] uppercase tracking-wide bg-gold text-ink font-bold px-2 py-1 rounded">Events</span>
+          <span class="absolute bottom-3 left-3 z-10 text-[10px] text-muted">Video placeholder — embed your YouTube/Vimeo reel here</span>
+        </div>
+        <div id="reel-playlist" class="grid sm:grid-cols-4 gap-2 mb-4"></div>
+        <h4 id="reel-chapter-title" class="font-display text-xl text-paper mb-1"></h4>
+        <p id="reel-chapter-desc" class="text-sm text-paper/60 mb-5 leading-relaxed"></p>
+        <div class="grid sm:grid-cols-3 gap-2 mb-5 text-[12px]">
+          <div class="border hairline rounded-md p-3"><p class="text-muted uppercase tracking-wide text-[10px] mb-1">Best for</p><p id="reel-best" class="text-paper/80 font-semibold"></p></div>
+          <div class="border hairline rounded-md p-3"><p class="text-muted uppercase tracking-wide text-[10px] mb-1">Runtime</p><p id="reel-runtime" class="text-paper/80 font-semibold"></p></div>
+          <div class="border hairline rounded-md p-3"><p class="text-muted uppercase tracking-wide text-[10px] mb-1">Deliverables</p><p id="reel-deliv" class="text-paper/80 font-semibold"></p></div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="serviceWhatsApp('the showreel — ' + reelChapters[currentReel].title)" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md">Ask about a project like this</button>
+          <button onclick="copyText('https://alijinie.github.io/Minds-Eyes-Tel-D-Vision/ — Young Ocha showreel', this)" class="text-sm font-semibold px-5 py-3 rounded-md border hairline hover:border-gold transition">Copy reel link</button>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-5 md:px-7 py-4 border-t hairline bg-black/20 rounded-b-lg">
+        <p class="text-[11px] text-muted">Tip: use ← → keys to switch chapters, ESC to exit.</p>
+        <button onclick="closeModal('reel-modal')" class="sm:flex-none text-sm font-bold px-6 py-2.5 rounded-md bg-ember hover:brightness-110 text-white transition">✕ Close reel</button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ==================== BOOKING MODAL ==================== -->
-<div id="booking-modal" class="modal fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/75" onclick="closeModal('booking-modal')"></div>
-  <div class="absolute inset-0 overflow-y-auto p-4 flex items-center justify-center">
-    <div class="bg-surface border hairline w-full max-w-lg rounded-md p-6 md:p-7 relative my-8 fade-up">
-      <button onclick="closeModal('booking-modal')" aria-label="Close" class="absolute top-4 right-4 w-8 h-8 bg-white/5 hover:bg-white/10 rounded-full flex items-center justify-center">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <p class="text-xs text-muted mb-1">Project brief</p>
-      <h3 class="font-display text-2xl text-paper mb-5">Book a session</h3>
-      <form class="space-y-3" onsubmit="submitBooking(event); closeModal('booking-modal');">
-        <div class="grid sm:grid-cols-2 gap-3">
-          <input required name="name" placeholder="Your name" class="rounded-md px-4 py-3 text-sm w-full">
-          <input required name="phone" placeholder="Phone number" class="rounded-md px-4 py-3 text-sm w-full">
+<div id="booking-modal" class="modal fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title" aria-hidden="true">
+  <div class="absolute inset-0 bg-black/80" onclick="closeModal('booking-modal')" aria-hidden="true"></div>
+  <div class="absolute inset-0 overflow-y-auto p-3 md:p-6 flex items-start md:items-center justify-center" onclick="if(event.target===this)closeModal('booking-modal')">
+    <div class="modal-panel bg-surface border hairline w-full max-w-xl rounded-lg relative my-4 md:my-8 shadow-2xl shadow-black/60">
+      <div class="flex items-center justify-between gap-3 px-5 md:px-7 py-4 border-b hairline bg-surface-2/60 sticky top-0 z-10 rounded-t-lg">
+        <div>
+          <p class="text-[11px] uppercase tracking-[.18em] text-goldsoft font-bold">Project brief • <span id="booking-step-label">Step 1 of 3</span></p>
+          <h3 id="booking-modal-title" class="font-display text-lg text-paper leading-tight">Book a session</h3>
         </div>
-        <div class="grid sm:grid-cols-2 gap-3">
-          <select required name="projectType" class="rounded-md px-4 py-3 text-sm w-full">
-            <option value="" disabled selected>Project type</option>
-            <option>Events photography/videography</option>
-            <option>Gospel film</option>
-            <option>Music video</option>
-            <option>Audio production</option>
-            <option>Social media skit/content</option>
-            <option>Other</option>
-          </select>
-          <input name="date" type="date" class="rounded-md px-4 py-3 text-sm w-full">
-        </div>
-        <input name="location" placeholder="Location / city" class="rounded-md px-4 py-3 text-sm w-full">
-        <textarea name="details" rows="3" placeholder="Tell us a bit more about the project..." class="rounded-md px-4 py-3 text-sm w-full"></textarea>
-        <button type="submit" class="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:brightness-95 text-white font-semibold py-3.5 rounded-md transition">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.57L4 20l1.02-4.5A8.5 8.5 0 1 1 21 11.5Z"/></svg>
-          Send via WhatsApp
+        <button onclick="closeModal('booking-modal')" aria-label="Close dialog (Escape)" class="modal-exit-btn flex-none">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+          Close <kbd class="hidden sm:inline">ESC</kbd>
         </button>
-      </form>
+      </div>
+      <div class="px-5 md:px-7 pt-4">
+        <div class="flex gap-1.5" id="booking-progress"><div class="step-dot fill"></div><div class="step-dot"></div><div class="step-dot"></div></div>
+      </div>
+      <div class="modal-scroll px-5 md:px-7 py-5">
+        <form id="booking-wizard" class="space-y-4" onsubmit="submitBooking(event);">
+          <div class="wizard-pane" data-pane="1">
+            <p class="text-sm font-bold text-paper mb-1">Who are you & what do you need?</p>
+            <p class="text-xs text-muted mb-3">This helps us reply with pricing, not just greetings.</p>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <label class="block"><span class="text-xs text-muted">Your name *</span><input required name="name" placeholder="e.g. Adaeze O." class="mt-1 rounded-md px-4 py-3 text-sm w-full"></label>
+              <label class="block"><span class="text-xs text-muted">Phone / WhatsApp *</span><input required name="phone" placeholder="080..." class="mt-1 rounded-md px-4 py-3 text-sm w-full"></label>
+            </div>
+            <label class="block mt-3"><span class="text-xs text-muted">Project type *</span>
+              <select required name="projectType" id="wizard-type" class="mt-1 rounded-md px-4 py-3 text-sm w-full">
+                <option value="" disabled selected>Choose one…</option>
+                <option>Events photography/videography</option>
+                <option>Gospel film</option>
+                <option>Music video</option>
+                <option>Audio production</option>
+                <option>Social media skit/content</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <div id="wizard-hint" class="mt-3 text-xs border border-gold/30 bg-gold/10 rounded-md px-3 py-2.5 text-paper/80 hidden"></div>
+          </div>
+          <div class="wizard-pane hidden" data-pane="2">
+            <p class="text-sm font-bold text-paper mb-1">When & where?</p>
+            <p class="text-xs text-muted mb-3">Rough answers are fine — we confirm on WhatsApp.</p>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <label class="block"><span class="text-xs text-muted">Preferred date</span><input name="date" type="date" class="mt-1 rounded-md px-4 py-3 text-sm w-full"></label>
+              <label class="block"><span class="text-xs text-muted">Location / city</span><input name="location" placeholder="e.g. Lagos — Ikeja" class="mt-1 rounded-md px-4 py-3 text-sm w-full"></label>
+            </div>
+            <label class="block mt-3"><span class="text-xs text-muted">Budget range (optional)</span>
+              <select name="budget" class="mt-1 rounded-md px-4 py-3 text-sm w-full">
+                <option value="" selected>Prefer to discuss</option>
+                <option>Under ₦100k</option><option>₦100k – ₦300k</option><option>₦300k – ₦750k</option><option>₦750k+</option>
+              </select>
+            </label>
+            <label class="block mt-3"><span class="text-xs text-muted">Tell us more</span><textarea name="details" rows="3" placeholder="Venue, song link, script idea, guest count…" class="mt-1 rounded-md px-4 py-3 text-sm w-full"></textarea></label>
+            <label class="flex items-start gap-2 mt-3 text-xs text-paper/70"><input type="checkbox" id="wizard-rush" class="mt-0.5"> <span>This is urgent (event in less than 7 days) — we prioritise WhatsApp replies for rush dates.</span></label>
+          </div>
+          <div class="wizard-pane hidden" data-pane="3">
+            <p class="text-sm font-bold text-paper mb-1">Review & send</p>
+            <p class="text-xs text-muted mb-3">Check everything, then send via WhatsApp. No payment is taken here.</p>
+            <div id="wizard-review" class="text-sm bg-surface-2 border hairline rounded-md p-4 space-y-1.5"></div>
+            <div class="mt-3 flex items-start gap-2 text-[11px] text-muted"><span>✔</span><span>By sending, you agree to be contacted on WhatsApp at the number you provided.</span></div>
+            <div id="wizard-success" class="hidden mt-3 border border-[#25D366]/50 bg-[#25D366]/10 rounded-md p-4 text-sm"><p class="font-bold text-paper mb-1">Brief ready — one tap to send ✓</p><p class="text-paper/70 text-xs">WhatsApp should have opened. If not, press “Send via WhatsApp” again or use Quick Chat below.</p></div>
+          </div>
+        </form>
+      </div>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 px-5 md:px-7 py-4 border-t hairline bg-black/20 rounded-b-lg">
+        <button onclick="closeModal('booking-modal')" class="text-sm font-semibold px-5 py-2.5 rounded-md border hairline hover:border-ember hover:text-white transition order-3 sm:order-1">✕ Cancel & close</button>
+        <div class="flex gap-2 order-1 sm:order-2">
+          <button id="wizard-back" onclick="wizardGo(-1)" class="hidden text-sm font-semibold px-5 py-2.5 rounded-md border hairline hover:border-gold transition">← Back</button>
+          <button id="wizard-next" onclick="wizardGo(1)" class="text-sm font-bold px-6 py-2.5 rounded-md btn-primary">Continue →</button>
+          <button id="wizard-send" onclick="document.getElementById('booking-wizard').requestSubmit()" class="hidden w-full sm:w-auto items-center justify-center gap-2 bg-[#25D366] hover:brightness-95 text-white text-sm font-bold px-6 py-2.5 rounded-md transition">Send via WhatsApp</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -511,33 +638,57 @@
       teaser:'Weddings, owambe, corporate launches — covered on multiple cameras so no moment slips past you.',
       lead:'Every event runs once. We treat it that way.',
       body:'Multi-camera coverage means the vows, the surprise entrance and the dance floor all get caught at the same time, not one after another. You get a same-week highlight reel for sharing right away, followed by the full edited film and every usable clip from the day.',
-      included:['Multi-camera photo & video coverage','Same-week highlight reel (2–4 min)','Full edited event film','All raw, sorted footage handed over','Drone coverage available on request'] },
+      included:['Multi-camera photo & video coverage','Same-week highlight reel (2–4 min)','Full edited event film','All raw, sorted footage handed over','Drone coverage available on request'],
+      price:'From ₦150k / day', duration:'1–3 days shoot • 7–14 days delivery', turnaround:'Highlight in 3–5 days',
+      steps:['Discovery call + date lock (20% deposit)','Shot-list & timeline sign-off','Multi-cam shoot day','Highlight reel → full film → raws'],
+      faqs:[['How fast do we get our video?','Highlight reel in 3–5 days, full film in 2–3 weeks depending on hours shot.'],['Do you travel outside Lagos?','Yes — travel + lodging added at cost. Tell us the city in the booking form.'],['Can we get raw files?','Yes. Every package includes sorted, usable clips, not a dumped memory card.']],
+      resources:[['Download: Event shot-list template','PDF • 1 page','Need the vows, entrance, family portraits — tick them off before the day.'],['Price guide: what affects cost?','Read • 2 min','Hours, cameras, drone, same-day edit — see what moves the quote.'],['WhatsApp us the date','Chat','We hold dates on deposit, first-come.']] },
     { id:2, key:'gospel', icon:'cross', title:'Gospel Films',
       teaser:'Short films, testimonies and ministry documentaries shot with the patience a message like that deserves.',
       lead:'A testimony loses nothing when it is filmed well.',
       body:'From scripted short films to a member telling their own testimony in their own words, the approach stays the same: steady pacing, clean sound and lighting that lets people watch without distraction. We work with your ministry team on the message first, then build the shoot around it.',
-      included:['Story/testimony development with your team','Scripted shorts or documentary-style testimonies','On-location or studio filming','Sound design and caption-ready subtitles','Cuts sized for church screens and social media'] },
+      included:['Story/testimony development with your team','Scripted shorts or documentary-style testimonies','On-location or studio filming','Sound design and caption-ready subtitles','Cuts sized for church screens and social media'],
+      price:'From ₦200k / project', duration:'2–4 weeks incl. script', turnaround:'Trailer + full cut + 3 social clips',
+      steps:['Message workshop with ministry team','Script / testimony outline','2-day location shoot','Edit, subtitles, church + social cuts'],
+      faqs:[['Can you work from our sermon/testimony?','Yes — send the audio or transcript and we shape the treatment around it.'],['Do you provide actors?','We cast from trusted talent pools or your congregation, your choice.'],['Subtitles included?','Yes, caption-ready SRT + burned-in social versions.']],
+      resources:[['Download: Testimony prep guide','PDF • 2 pages','5 questions that turn a long story into a shootable outline.'],['Ministry screening checklist','Checklist','Projector, sound, aspect ratio — don\u2019t get surprised on Sunday.'],['Book a story call','Chat','15-min call to test if your message fits film.']] },
     { id:3, key:'music', icon:'mic', title:'Music Videos & Audio Production',
       teaser:'Direction, shooting and edit on the video side; writing, arrangement and mixing on the audio side.',
       lead:'One person shaping the sound and the picture, not two vendors guessing at each other.',
       body:'On the audio side: beat production, vocal recording, arrangement and mixing. On the video side: treatment, locations, shoot day and edit. Because both sides come from Minds Eyes, the video is built around what the record is actually saying.',
-      included:['Beat production, arrangement & mixing','Vocal recording sessions','Video treatment & concept development','Location scouting & shoot-day direction','Colour-graded final edit for streaming platforms'] },
+      included:['Beat production, arrangement & mixing','Vocal recording sessions','Video treatment & concept development','Location scouting & shoot-day direction','Colour-graded final edit for streaming platforms'],
+      price:'Audio from ₦80k • Video from ₦250k', duration:'1 day shoot • 7–10 days post', turnaround:'Lyric clip + full video + stems',
+      steps:['Listen + treatment (built around lyrics)','Beat/record/mix lock','Location scout + shoot','Grade, master, platform exports'],
+      faqs:[['I already have a mixed song — can you just shoot?','Absolutely. Send the final WAV + lyrics and we treatment from there.'],['Do you record vocals too?','Yes — tracking + mix in-house, so the video director already knows the song.'],['How many looks/locations?','Typically 2–3 per day. More than that needs a second day.']],
+      resources:[['Download: Video treatment template','PDF','Send us your track + this one-pager and get a concept back.'],['Release checklist: audio → video','Checklist','Stems, split-sheets, cover art, distributor specs.'],['Hear mix + video bundles','Chat','Ask for the bundle price — it\u2019s cheaper together.']] },
     { id:4, key:'skits', icon:'phone', title:'Social Media Skits & Content',
       teaser:'Comedy skits, brand content and reels built for the scroll, from concept to caption.',
       lead:'Made to be watched in the first three seconds.',
       body:'Skit writing, casting, same-day shooting and a fast edit — built for Instagram, TikTok and WhatsApp Status, not repurposed from something longer. Brands get the same treatment: a script that sounds like a person, not an advert.',
-      included:['Skit scripting & concept development','Same-day or next-day shoot turnaround','Edited for vertical, sound-off-friendly viewing','Batch content days available','Caption & posting-time suggestions included'] }
+      included:['Skit scripting & concept development','Same-day or next-day shoot turnaround','Edited for vertical, sound-off-friendly viewing','Batch content days available','Caption & posting-time suggestions included'],
+      price:'From ₦60k / skit • Batch days save 30%', duration:'Same-day to 72hrs', turnaround:'Vertical master + hook variant',
+      steps:['Hook + script (3-sec rule)','Half-day shoot','Same-day edit + captions','Posting calendar + 2 hook variants'],
+      faqs:[['How fast is turnaround?','Single skit: 24–72hrs. Batch of 6 reels: one shoot afternoon + staggered delivery.'],['Do you post for us?','We deliver captioned + scheduled; posting stays with you unless retainer.'],['Can brands get non-comedy content?','Yes — product demos, testimonials, behind-scenes in the same vertical system.']],
+      resources:[['Download: 10 scroll-stopping hooks','PDF','First-3-second lines tailored to comedy + business.'],['Batch-day planner','Sheet','How 6 reels get shot in one afternoon.'],['Get a content calendar','Chat','Tell us your handle, get a 2-week plan.']] }
   ];
 
   const works = [
-    { id:1, category:'events', frame:'01', title:'[Client Name] — Traditional Wedding Coverage', desc:'Full-day owambe coverage across two locations, cut into a same-week highlight reel and a longer keepsake film.' },
-    { id:2, category:'events', frame:'02', title:'[Brand Name] — Product Launch Highlights', desc:'Multi-camera coverage of a product launch, delivered as a recap video and standalone clips for social pages.' },
-    { id:3, category:'gospel', frame:'03', title:'Beyond the Valley — Short Film', desc:'A scripted short film built around a testimony, shot on location over two days with a small cast and crew.' },
-    { id:4, category:'gospel', frame:'04', title:'[Ministry Name] — Testimony Series', desc:'A five-part testimony series filmed for Sunday screenings and shared clip by clip through the week.' },
-    { id:5, category:'music', frame:'05', title:'[Artist Name] — "[Track Title]" Official Video', desc:'Treatment, location shoot and full edit for a single release, plus the mix that shipped with it.' },
-    { id:6, category:'music', frame:'06', title:'[Artist Name] — Studio Session', desc:'Vocal recording and mix for an EP, tracked and produced start to finish at Minds Eyes.' },
-    { id:7, category:'skits', frame:'07', title:'Skit: "[Skit Title]"', desc:'A three-minute comedy skit written, shot and edited in a single day for Instagram and TikTok.' },
-    { id:8, category:'skits', frame:'08', title:'[Brand Name] — Reels Campaign', desc:'A six-reel content batch for a small business, shot in one afternoon and delivered across two weeks.' }
+    { id:1, category:'events', frame:'01', title:'[Client Name] — Traditional Wedding Coverage', desc:'Full-day owambe coverage across two locations, cut into a same-week highlight reel and a longer keepsake film.',
+      client:'Private client', year:'2025', duration:'10-hr day • 2 locations', gear:'2× mirrorless • gimbal • drone', deliverables:['3-min highlight','45-min film','120 sorted clips'], quote:'He caught moments we didn\u2019t even see happen. — Bride', bts:['Call time 6am, prep + flat-lay','Ceremony multi-cam lock-off','Reception sparkler exit'] },
+    { id:2, category:'events', frame:'02', title:'[Brand Name] — Product Launch Highlights', desc:'Multi-camera coverage of a product launch, delivered as a recap video and standalone clips for social pages.',
+      client:'Brand / corporate', year:'2025', duration:'Half-day • 1 venue', gear:'3-cam + wireless audio', deliverables:['90-sec recap','6 social cutdowns','Photo set'], quote:'The recap did more work than our ads. — Marketing lead', bts:['Stage + audience angles mapped','Founder soundbite booth','Same-night teaser cut'] },
+    { id:3, category:'gospel', frame:'03', title:'Beyond the Valley — Short Film', desc:'A scripted short film built around a testimony, shot on location over two days with a small cast and crew.',
+      client:'Ministry partner', year:'2024', duration:'2-day shoot', gear:'Cinema camera • primes • boom', deliverables:['22-min film','Trailer','3 testimony clips'], quote:'Our congregation watched in silence, then applause. — Pastor', bts:['Script + location consecration','Day 1 exteriors, Day 2 interiors','Church-screen grade pass'] },
+    { id:4, category:'gospel', frame:'04', title:'[Ministry Name] — Testimony Series', desc:'A five-part testimony series filmed for Sunday screenings and shared clip by clip through the week.',
+      client:'Church media team', year:'2024', duration:'1 week production', gear:'Interview kit + B-roll rig', deliverables:['5× 6-min episodes','Subtitled versions','Thumbnail pack'], quote:'Giving went up the week we screened part 3. — Media HOD', bts:['5 pre-interviews transcribed','B-roll: home, work, church','Weekly drop calendar'] },
+    { id:5, category:'music', frame:'05', title:'[Artist Name] — "[Track Title]" Official Video', desc:'Treatment, location shoot and full edit for a single release, plus the mix that shipped with it.',
+      client:'Recording artist', year:'2025', duration:'1-day shoot + studio', gear:'4K cinema • anamorphic • haze', deliverables:['Official video','Lyric visualizer','Stems + master'], quote:'He produced the beat AND the video — same vision. — Artist', bts:['Treatment from lyrics sheet','2 looks, 1 location','Grade matched to cover art'] },
+    { id:6, category:'music', frame:'06', title:'[Artist Name] — Studio Session', desc:'Vocal recording and mix for an EP, tracked and produced start to finish at Minds Eyes.',
+      client:'EP project', year:'2025', duration:'3 sessions', gear:'Condenser • treated room • mix suite', deliverables:['5-track EP mix','Stems','Instrumentals'], quote:'My voice finally sounds like me, only bigger. — Singer', bts:['Demo → arrangement','Comp + tune + stack','Car / phone / club test'] },
+    { id:7, category:'skits', frame:'07', title:'Skit: "[Skit Title]"', desc:'A three-minute comedy skit written, shot and edited in a single day for Instagram and TikTok.',
+      client:'Creator collab', year:'2025', duration:'1-day turnaround', gear:'Vertical rig • lav • LED', deliverables:['3-min skit','2 hook variants','Captions'], quote:'1M views in a week. The hook did it. — Creator', bts:['Hook written first','3 takes per beat max','Posted at 7pm WAT'] },
+    { id:8, category:'skits', frame:'08', title:'[Brand Name] — Reels Campaign', desc:'A six-reel content batch for a small business, shot in one afternoon and delivered across two weeks.',
+      client:'Small business', year:'2025', duration:'Half-day batch', gear:'Phone + cinema hybrid', deliverables:['6 reels','Caption bank','Posting schedule'], quote:'We sold out twice from those reels. — Founder', bts:['6 scripts pre-approved','One location, 6 outfits','Drip-fed over 14 days'] }
   ];
 
   const filters = [
@@ -565,18 +716,75 @@
 
   function openServiceModal(id){
     const s = services.find(x => x.id === id);
+    activeServiceTab = 'overview';
+    document.getElementById('service-modal-title').textContent = s.title;
     document.getElementById('service-modal-body').innerHTML = `
-      <div class="mb-4">${icons[s.icon]}</div>
-      <h3 class="font-display text-2xl text-paper mb-1">${s.title}</h3>
-      <p class="text-goldsoft text-sm italic mb-4">${s.lead}</p>
-      <p class="text-paper/70 text-sm leading-relaxed mb-5">${s.body}</p>
-      <p class="text-xs uppercase tracking-wide text-muted mb-2">What's included</p>
-      <ul class="space-y-1.5 mb-6">
-        ${s.included.map(i => `<li class="text-sm text-paper/70 flex gap-2"><span class="text-gold">—</span>${i}</li>`).join('')}
-      </ul>
-      <button onclick="serviceWhatsApp('${s.title.replace(/'/g,"\\'")}')" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md w-full sm:w-auto">Ask about this</button>
+      <div class="flex items-start gap-4 mb-4">
+        <div class="flex-none w-14 h-14 rounded-md bg-surface-2 border hairline flex items-center justify-center">${icons[s.icon]}</div>
+        <div>
+          <h3 class="font-display text-2xl text-paper leading-tight">${s.title}</h3>
+          <p class="text-goldsoft text-sm italic">${s.lead}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 gap-2 mb-4 text-[12px]">
+        <div class="border hairline rounded-md p-2.5 bg-surface-2/50"><p class="text-[10px] uppercase tracking-wide text-muted mb-0.5">Pricing</p><p class="font-bold text-paper">${s.price}</p></div>
+        <div class="border hairline rounded-md p-2.5 bg-surface-2/50"><p class="text-[10px] uppercase tracking-wide text-muted mb-0.5">Timeline</p><p class="font-bold text-paper">${s.duration}</p></div>
+        <div class="border hairline rounded-md p-2.5 bg-surface-2/50"><p class="text-[10px] uppercase tracking-wide text-muted mb-0.5">You get</p><p class="font-bold text-paper">${s.turnaround}</p></div>
+      </div>
+      <div class="flex gap-2 overflow-x-auto pb-1 mb-4" role="tablist">
+        ${[['overview','Overview'],['included','Checklist'],['process','Process'],['faq','FAQ'],['resources','Resources']].map(([k,l])=>`<button role="tab" onclick="switchServiceTab(${s.id},'${k}')" class="tab-btn ${activeServiceTab===k?'active':''}">${l}</button>`).join('')}
+      </div>
+      <div id="service-tab-body"></div>
+      <div class="mt-5 flex flex-col sm:flex-row gap-2">
+        <button onclick="serviceWhatsApp('${s.title.replace(/'/g,"\\'")}')" class="btn-primary font-bold text-sm px-5 py-3 rounded-md flex-1">Ask about this on WhatsApp</button>
+        <button onclick="closeModal('service-modal');openModal('booking-modal');presetWizardType('${s.title.replace(/'/g,"\\'")}')" class="text-sm font-semibold px-5 py-3 rounded-md border hairline hover:border-gold transition flex-1">Book this service →</button>
+      </div>
     `;
+    renderServiceTab(s);
     openModal('service-modal');
+  }
+  let activeServiceTab = 'overview';
+  function switchServiceTab(id, tab){ activeServiceTab = tab;
+    document.querySelectorAll('#service-modal-body [role="tab"]').forEach(b=>b.classList.remove('active'));
+    const btns = document.querySelectorAll('#service-modal-body [role="tab"]');
+    const idx = {overview:0,included:1,process:2,faq:3,resources:4}[tab];
+    if(btns[idx]) btns[idx].classList.add('active');
+    renderServiceTab(services.find(x=>x.id===id));
+  }
+  function renderServiceTab(s){
+    const el = document.getElementById('service-tab-body');
+    if(!el) return;
+    if(activeServiceTab==='overview'){
+      el.innerHTML = `<p class="text-paper/70 text-sm leading-relaxed mb-4">${s.body}</p>
+      <div class="border border-gold/30 bg-gold/10 rounded-md p-3 text-xs text-paper/80 flex gap-2"><span>◎</span><span><b>Best for:</b> ${s.teaser}</span></div>`;
+    } else if(activeServiceTab==='included'){
+      const done = s.included.map(()=>false);
+      window['_svc_'+s.id] = done;
+      el.innerHTML = `<div class="flex items-center justify-between mb-2"><p class="text-xs uppercase tracking-wide text-muted">Tap to tick your must-haves — <span id="svc-progress-label">0/${s.included.length}</span></p><button onclick="copyChecklist(${s.id})" class="text-xs font-bold text-goldsoft hover:text-paper">Copy list</button></div>
+      <div class="w-full h-1.5 rounded-full bg-white/10 mb-3 overflow-hidden"><div id="svc-progress-bar" class="h-full w-0 bg-gradient-to-r from-gold to-ember-soft transition-all"></div></div>
+      <div class="space-y-2">${s.included.map((i,ix)=>`<div class="check-row" onclick="toggleCheck(this,${s.id},${ix})"><span class="check-box">✓</span><span class="check-label">${i}</span></div>`).join('')}</div>
+      <p class="text-[11px] text-muted mt-2">Ticked items are copied into your WhatsApp message automatically.</p>`;
+    } else if(activeServiceTab==='process'){
+      el.innerHTML = `<ol class="space-y-2">${s.steps.map((st,i)=>`<li class="flex gap-3 items-start border hairline rounded-md p-3 bg-surface-2/40"><span class="font-display text-goldsoft text-lg leading-none">0${i+1}</span><span class="text-sm text-paper/75">${st}</span></li>`).join('')}</ol>`;
+    } else if(activeServiceTab==='faq'){
+      el.innerHTML = `<div class="space-y-2">${s.faqs.map(([q,a],i)=>`<div class="accordion-item ${i===0?'open':''}"><button class="accordion-q" onclick="this.parentElement.classList.toggle('open')"><span>${q}</span><span class="acc-icon">+</span></button><div class="accordion-a"><p class="px-4 pb-3 text-sm text-paper/65">${a}</p></div></div>`).join('')}</div>`;
+    } else {
+      el.innerHTML = `<div class="space-y-2">${s.resources.map(([t,meta,d])=>`<button class="resource-link" onclick="serviceWhatsApp('${s.title.replace(/'/g,"\\'")} — ${t.replace(/'/g,"\\'")}')"><span><span class="block font-bold text-paper">${t}</span><span class="block text-muted text-xs mt-0.5">${meta} • ${d}</span></span><span class="text-goldsoft font-bold">→</span></button>`).join('')}</div>`;
+    }
+  }
+  function toggleCheck(row, sid, ix){
+    row.classList.toggle('done');
+    const on = document.querySelectorAll('#service-tab-body .check-row.done').length;
+    const total = document.querySelectorAll('#service-tab-body .check-row').length;
+    const lbl = document.getElementById('svc-progress-label'), bar = document.getElementById('svc-progress-bar');
+    if(lbl) lbl.textContent = on + '/' + total;
+    if(bar) bar.style.width = (total? (on/total*100):0) + '%';
+  }
+  function copyChecklist(id){
+    const s = services.find(x=>x.id===id);
+    const rows = [...document.querySelectorAll('#service-tab-body .check-row')];
+    const picked = rows.filter(r=>r.classList.contains('done')).map(r=>r.querySelector('.check-label').textContent);
+    copyText((picked.length?picked:s.included).map(i=>'• '+i).join('\n'), event?.target);
   }
 
   // ==================== RENDER: WORK ====================
@@ -604,52 +812,217 @@
   function categoryIcon(cat){ return { events:'camera', gospel:'cross', music:'mic', skits:'phone' }[cat]; }
   function categoryLabel(cat){ return { events:'Events', gospel:'Gospel', music:'Music', skits:'Skits' }[cat]; }
 
+  let currentWorkId = null, galleryIdx = 0;
   function openWorkModal(id){
-    const w = works.find(x => x.id === id);
-    document.getElementById('work-modal-body').innerHTML = `
-      <div class="placeholder-frame aspect-video rounded-sm border hairline flex items-center justify-center mb-5">
-        <div class="relative z-10">${icons[categoryIcon(w.category)]}</div>
-        <span class="absolute top-3 left-3 z-10 text-[10px] text-muted">No. ${w.frame}</span>
-        <span class="absolute top-3 right-3 z-10 text-[10px] uppercase tracking-wide text-goldsoft">${categoryLabel(w.category)}</span>
-      </div>
-      <h3 class="font-display text-2xl text-paper mb-3">${w.title}</h3>
-      <p class="text-paper/70 text-sm leading-relaxed mb-6">${w.desc}</p>
-      <button onclick="serviceWhatsApp('${w.title.replace(/'/g,"\\'")}')" class="btn-primary font-semibold text-sm px-5 py-3 rounded-md w-full sm:w-auto">Discuss a project like this</button>
-    `;
+    currentWorkId = id; galleryIdx = 0;
+    renderWorkModal();
     openModal('work-modal');
+  }
+  function stepWork(dir){
+    const ids = works.filter(w => activeFilter==='all'||w.category===activeFilter).map(w=>w.id);
+    let pool = ids.length? ids : works.map(w=>w.id);
+    let i = pool.indexOf(currentWorkId);
+    i = (i + dir + pool.length) % pool.length;
+    currentWorkId = pool[i]; galleryIdx = 0;
+    renderWorkModal();
+  }
+  function setGallery(i){ galleryIdx = i; renderWorkModal(true); }
+  function renderWorkModal(keepScroll){
+    const w = works.find(x => x.id === currentWorkId);
+    if(!w) return;
+    const scroller = document.querySelector('#work-modal .modal-scroll');
+    const top = scroller ? scroller.scrollTop : 0;
+    document.getElementById('work-modal-title').textContent = w.title;
+    const list = works.filter(x => activeFilter==='all'||x.category===activeFilter);
+    const pos = list.findIndex(x=>x.id===w.id);
+    document.getElementById('work-modal-count').textContent = list.length? `• ${pos+1} / ${list.length}` : '';
+    const slides = [
+      {t:'Hero frame', d:'Key visual — swap with a real still from the project.'},
+      {t:'Behind the scenes', d:w.bts[0] || 'On-set process photo goes here.'},
+      {t:'Detail / grade', d:w.bts[1] || 'Close-up or colour-grade comparison.'}
+    ];
+    document.getElementById('work-modal-body').innerHTML = `
+      <div class="placeholder-frame aspect-video rounded-md border hairline flex items-center justify-center mb-2 relative overflow-hidden">
+        <div class="relative z-10 text-center px-6">
+          <div class="flex justify-center mb-2">${icons[categoryIcon(w.category)]}</div>
+          <p class="font-display text-xl text-paper">${slides[galleryIdx].t}</p>
+          <p class="text-xs text-muted mt-1">${slides[galleryIdx].d}</p>
+        </div>
+        <span class="absolute top-3 left-3 z-10 text-[10px] font-mono bg-black/60 px-2 py-1 rounded text-muted">No. ${w.frame} • ${galleryIdx+1}/3</span>
+        <span class="absolute top-3 right-3 z-10 text-[10px] uppercase tracking-wide bg-gold text-ink font-bold px-2 py-1 rounded">${categoryLabel(w.category)}</span>
+        <button onclick="stepGallery(-1)" aria-label="Previous image" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/60 border hairline text-paper hover:border-gold">‹</button>
+        <button onclick="stepGallery(1)" aria-label="Next image" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/60 border hairline text-paper hover:border-gold">›</button>
+      </div>
+      <div class="flex items-center justify-center gap-1.5 mb-5">${slides.map((_,i)=>`<button onclick="setGallery(${i})" aria-label="Go to image ${i+1}" class="gallery-dot ${i===galleryIdx?'active':''}"></button>`).join('')}</div>
+      <h3 class="font-display text-2xl text-paper mb-2 leading-tight">${w.title}</h3>
+      <p class="text-paper/70 text-sm leading-relaxed mb-4">${w.desc}</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 text-[12px]">
+        <div class="border hairline rounded-md p-2.5"><p class="text-[10px] uppercase tracking-wide text-muted">Client</p><p class="font-bold text-paper/85">${w.client}</p></div>
+        <div class="border hairline rounded-md p-2.5"><p class="text-[10px] uppercase tracking-wide text-muted">Year</p><p class="font-bold text-paper/85">${w.year}</p></div>
+        <div class="border hairline rounded-md p-2.5"><p class="text-[10px] uppercase tracking-wide text-muted">Schedule</p><p class="font-bold text-paper/85">${w.duration}</p></div>
+        <div class="border hairline rounded-md p-2.5"><p class="text-[10px] uppercase tracking-wide text-muted">Kit</p><p class="font-bold text-paper/85">${w.gear}</p></div>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-2 mb-4">
+        <div class="border hairline rounded-md p-3 bg-surface-2/40"><p class="text-[10px] uppercase tracking-wide text-muted mb-1.5">Deliverables</p><ul class="text-[13px] text-paper/75 space-y-1">${w.deliverables.map(d=>`<li>✓ ${d}</li>`).join('')}</ul></div>
+        <div class="border hairline rounded-md p-3 bg-surface-2/40"><p class="text-[10px] uppercase tracking-wide text-muted mb-1.5">How it ran</p><ul class="text-[13px] text-paper/75 space-y-1">${w.bts.map(d=>`<li>→ ${d}</li>`).join('')}</ul></div>
+      </div>
+      <blockquote class="border-l-2 border-gold pl-3 py-1 mb-4"><p class="text-sm italic text-paper/80">“${w.quote}”</p></blockquote>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="serviceWhatsApp('${w.title.replace(/'/g,"\\'")}')" class="btn-primary font-bold text-sm px-5 py-3 rounded-md">Discuss a project like this</button>
+        <button onclick="copyText('${w.title.replace(/'/g,"\\'")} — ${w.desc.replace(/'/g,"\\'").slice(0,120)}', this)" class="text-sm font-semibold px-5 py-3 rounded-md border hairline hover:border-gold transition">Copy brief</button>
+      </div>
+    `;
+    if(keepScroll && scroller) scroller.scrollTop = top;
+    else if(scroller) scroller.scrollTop = 0;
+  }
+  function stepGallery(d){ const n=3; galleryIdx=(galleryIdx+d+n)%n; renderWorkModal(true); }
+
+  // ==================== REEL PLAYLIST ====================
+  const reelChapters = [
+    { key:'events', title:'Events in motion', desc:'Owambe entrances, vows and dance-floor energy — multi-cam cuts that keep the day feeling live.', best:'Weddings & launches', runtime:'0:00 – 0:40', deliv:'Highlight + full film' },
+    { key:'gospel', title:'Faith on film', desc:'A testimony scene and a short-film moment — slow, steady, built for church screens.', best:'Ministries', runtime:'0:40 – 1:20', deliv:'Trailer + series cuts' },
+    { key:'music', title:'Sound + picture', desc:'A performance cut where the grade follows the beat — shot and mixed by the same hands.', best:'Artists & labels', runtime:'1:20 – 2:00', deliv:'Video + master' },
+    { key:'skits', title:'Built for the scroll', desc:'Two skit hooks back-to-back — first-three-seconds comedy, captioned for sound-off.', best:'Creators & brands', runtime:'2:00 – 2:40', deliv:'Reels + captions' }
+  ];
+  let currentReel = 0;
+  function renderReel(){
+    const c = reelChapters[currentReel];
+    document.getElementById('reel-playlist').innerHTML = reelChapters.map((r,i)=>`
+      <button onclick="playReelChapter(${i})" class="text-left border rounded-md px-3 py-2.5 text-xs transition ${i===currentReel?'border-gold bg-gold/10 text-paper':'hairline text-paper/60 hover:border-gold/50 hover:text-paper'}">
+        <span class="block font-bold ${i===currentReel?'text-goldsoft':''}">${i+1}. ${r.title}</span>
+        <span class="block mt-0.5 opacity-70">${r.runtime}</span>
+      </button>`).join('');
+    document.getElementById('reel-chapter-title').textContent = (currentReel+1) + '. ' + c.title;
+    document.getElementById('reel-chapter-desc').textContent = c.desc;
+    document.getElementById('reel-best').textContent = c.best;
+    document.getElementById('reel-runtime').textContent = c.runtime;
+    document.getElementById('reel-deliv').textContent = c.deliv;
+    document.getElementById('reel-chapter-tag').textContent = c.key;
+    document.getElementById('reel-timecode').textContent = c.runtime + ' • chapter ' + (currentReel+1) + '/4';
+  }
+  function playReelChapter(i){ currentReel = i; renderReel();
+    const stage = document.getElementById('reel-stage');
+    stage.style.transform = 'scale(.99)'; setTimeout(()=>stage.style.transform='',150);
+  }
+
+  // ==================== BOOKING WIZARD ====================
+  let wizardStep = 1;
+  const wizardHints = {
+    'Events photography/videography':'Tip: give us guest count + venue — we reply with camera count and highlight timing.',
+    'Gospel film':'Tip: paste a testimony link or 3-line summary — we return a treatment angle.',
+    'Music video':'Tip: drop your track link + 2 reference videos — treatment comes back 2× faster.',
+    'Audio production':'Tip: say demo or from-scratch — we quote tracking vs full production differently.',
+    'Social media skit/content':'Tip: share your handle — we audit your last 6 posts before quoting.',
+    'Other':'Tip: one line on the dream outcome is enough — we shape the rest on the call.'
+  };
+  function presetWizardType(title){
+    const sel = document.getElementById('wizard-type');
+    if(!sel) return;
+    const map = [['Events','Events photography'],['Gospel','Gospel film'],['Music video','Music video'],['Audio','Audio production'],['Social','Social media skit']];
+    const hit = map.find(([k])=>title.includes(k));
+    if(hit){ [...sel.options].forEach(o=>{ if(o.text.includes(hit[1].split(' ')[0])) sel.value = o.value || o.text; });
+      sel.selectedIndex = [...sel.options].findIndex(o=>o.text.startsWith(hit[1].split(' ')[0]));
+    }
+    wizardSetStep(1); updateWizardHint();
+  }
+  function updateWizardHint(){
+    const v = document.getElementById('wizard-type')?.value || '';
+    const box = document.getElementById('wizard-hint');
+    const selText = document.getElementById('wizard-type')?.selectedOptions?.[0]?.text || '';
+    const hint = wizardHints[selText] || wizardHints[v] || '';
+    if(hint && box){ box.textContent = hint; box.classList.remove('hidden'); } else if(box){ box.classList.add('hidden'); }
+  }
+  function wizardSetStep(n){
+    wizardStep = Math.min(3, Math.max(1, n));
+    document.querySelectorAll('#booking-wizard .wizard-pane').forEach(p=>p.classList.toggle('hidden', +p.dataset.pane!==wizardStep));
+    document.querySelectorAll('#booking-progress .step-dot').forEach((d,i)=>d.classList.toggle('fill', i<wizardStep));
+    document.getElementById('booking-step-label').textContent = 'Step ' + wizardStep + ' of 3';
+    document.getElementById('wizard-back').classList.toggle('hidden', wizardStep===1);
+    document.getElementById('wizard-next').classList.toggle('hidden', wizardStep===3);
+    document.getElementById('wizard-send').classList.toggle('hidden', wizardStep!==3);
+    document.getElementById('wizard-send').classList.toggle('flex', wizardStep===3);
+    if(wizardStep===3) renderWizardReview();
+  }
+  function wizardGo(dir){
+    if(dir>0 && wizardStep===1){
+      const f = document.getElementById('booking-wizard');
+      if(!f.name.value.trim() || !f.phone.value.trim() || !f.projectType.value){ f.reportValidity(); return; }
+    }
+    wizardSetStep(wizardStep+dir);
+  }
+  function renderWizardReview(){
+    const f = document.getElementById('booking-wizard');
+    const g = n => (f[n]?.value || '—');
+    const rush = document.getElementById('wizard-rush')?.checked ? '<span class="text-ember-soft font-bold">URGENT — under 7 days</span>' : 'Standard timing';
+    document.getElementById('wizard-review').innerHTML = `
+      <p><span class="text-muted">Name:</span> <b>${g('name')}</b></p>
+      <p><span class="text-muted">Phone:</span> <b>${g('phone')}</b></p>
+      <p><span class="text-muted">Type:</span> <b>${f.projectType.selectedOptions?.[0]?.text || g('projectType')}</b></p>
+      <p><span class="text-muted">Date:</span> <b>${g('date')||'Flexible'}</b> &nbsp; <span class="text-muted">Location:</span> <b>${g('location')||'TBD'}</b></p>
+      <p><span class="text-muted">Budget:</span> <b>${g('budget')||'To discuss'}</b> &nbsp; <span class="text-muted">Priority:</span> ${rush}</p>
+      <p><span class="text-muted">Details:</span> ${g('details')||'—'}</p>`;
   }
 
   // ==================== MODAL HELPERS ====================
+  let lastFocused = null;
   function openModal(id){
-    document.getElementById(id).classList.remove('hidden');
+    const m = document.getElementById(id);
+    if(!m) return;
+    lastFocused = document.activeElement;
+    m.classList.remove('hidden'); m.classList.remove('closing');
+    m.setAttribute('aria-hidden','false');
     document.body.style.overflow = 'hidden';
+    if(id==='reel-modal') renderReel();
+    if(id==='booking-modal'){ wizardSetStep(1); }
+    const panel = m.querySelector('.modal-panel');
+    if(panel){ panel.classList.remove('fade-up'); void panel.offsetWidth; panel.classList.add('fade-up'); }
+    setTimeout(()=>{ const f = m.querySelector('input,select,textarea,button.modal-exit-btn'); if(f) f.focus({preventScroll:true}); },60);
   }
   function closeModal(id){
-    document.getElementById(id).classList.add('hidden');
-    document.body.style.overflow = '';
+    const m = document.getElementById(id);
+    if(!m || m.classList.contains('hidden')) return;
+    m.classList.add('closing');
+    setTimeout(()=>{ m.classList.add('hidden'); m.classList.remove('closing'); m.setAttribute('aria-hidden','true');
+      if(!document.querySelector('.modal:not(.hidden)')){ document.body.style.overflow=''; if(lastFocused?.focus) lastFocused.focus({preventScroll:true}); }
+    },140);
   }
+  function copyText(t, btn){
+    const done = ()=>{ if(!btn) return; const o=btn.textContent; btn.textContent='Copied ✓'; setTimeout(()=>btn.textContent=o,1400); };
+    if(navigator.clipboard?.writeText) navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t,done)); else fallbackCopy(t,done);
+  }
+  function fallbackCopy(t, done){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); done&&done();}catch(e){} ta.remove(); }
 
   // ==================== BOOKING FORM ====================
   function submitBooking(e){
     e.preventDefault();
-    const d = new FormData(e.target);
+    const f = e.target;
+    const d = new FormData(f);
+    const typeText = f.projectType?.selectedOptions?.[0]?.text || d.get('projectType');
+    const rush = document.getElementById('wizard-rush')?.checked && f.id==='booking-wizard' ? '\nPriority: URGENT (under 7 days)' : '';
     const msg = "Hi Young Ocha! I'd like to book a session with Minds Eyes Tel-D-Vision.\n\n" +
       "*PROJECT BRIEF*\n" +
       "Name: " + d.get('name') + "\n" +
       "Phone: " + d.get('phone') + "\n" +
-      "Project type: " + d.get('projectType') + "\n" +
+      "Project type: " + typeText + "\n" +
       "Preferred date: " + (d.get('date') || 'Flexible') + "\n" +
-      "Location: " + (d.get('location') || 'Not specified') + "\n\n" +
+      "Location: " + (d.get('location') || 'Not specified') + "\n" +
+      (d.get('budget') ? "Budget: " + d.get('budget') + "\n" : "") + rush + "\n\n" +
       "Details:\n" + (d.get('details') || 'None given') + "\n\n" +
       "Please let me know availability and pricing.";
     openWhatsApp(msg);
+    const ok = document.getElementById('wizard-success');
+    if(ok && f.id==='booking-wizard') ok.classList.remove('hidden');
   }
 
   // ==================== INIT ====================
+  function openTopModal(){ return [...document.querySelectorAll('.modal')].find(m=>!m.classList.contains('hidden')); }
   document.addEventListener('DOMContentLoaded', () => {
     renderServices();
     renderFilters();
     renderWork();
+    renderReel();
+    wizardSetStep(1);
+    document.getElementById('wizard-type')?.addEventListener('change', updateWizardHint);
     document.getElementById('footer-year').textContent = '© ' + new Date().getFullYear() + ' Minds Eyes Tel-D-Vision. All rights reserved.';
 
     requestAnimationFrame(() => {
@@ -660,9 +1033,20 @@
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
-        document.body.style.overflow = '';
+      const top = openTopModal();
+      if(e.key === 'Escape' && top){ closeModal(top.id); return; }
+      if(!top) return;
+      // arrow-key navigation inside work + reel modals
+      if(top.id==='work-modal' && (e.key==='ArrowRight'||e.key==='ArrowLeft')){ stepWork(e.key==='ArrowRight'?1:-1); }
+      if(top.id==='reel-modal' && (e.key==='ArrowRight'||e.key==='ArrowLeft')){ playReelChapter((currentReel + (e.key==='ArrowRight'?1:3)) % 4); }
+      if(top.id==='service-modal' && e.key==='ArrowRight'){ /* keep focus inside */ }
+      // simple focus trap
+      if(e.key==='Tab'){
+        const els = [...top.querySelectorAll('button,input,select,textarea,a[href]')].filter(el=>!el.disabled && el.offsetParent!==null);
+        if(!els.length) return;
+        const first = els[0], last = els[els.length-1];
+        if(e.shiftKey && document.activeElement===first){ last.focus(); e.preventDefault(); }
+        else if(!e.shiftKey && document.activeElement===last){ first.focus(); e.preventDefault(); }
       }
     });
   });
